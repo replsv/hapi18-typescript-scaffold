@@ -3,6 +3,8 @@ import * as Hapi from "@hapi/hapi";
 import Config from "../config";
 import Logger from "../utils/logger";
 
+import * as HapiSwaggerPlugin from "hapi-swagger";
+
 export default class Plugins {
   /**
    * Inits plugins
@@ -39,10 +41,10 @@ export default class Plugins {
       await Plugins.register(server, [
         {
           options: Config.swagger.options,
-          plugin: require("hapi-swagger")
+          plugin: HapiSwaggerPlugin
         },
-        require("@hapi/vision"), // no config
-        require("@hapi/inert") // no config
+        require("@hapi/inert"),
+        require("@hapi/vision")
       ]);
     } catch (error) {
       Logger.info(`[Plugins] Something went wrong: ${error}`);
