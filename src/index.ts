@@ -8,20 +8,22 @@ import Logger from "./utils/logger";
 // Global listeners
 process
   .on("SIGINT", () => {
-    Logger.info("Stopping server");
+    Logger.server.info("Stopping server");
     Server.stop().then(err => {
-      Logger.info(`Server stopped`);
+      Logger.process.info(`Server stopped`);
       process.exit(err ? 1 : 0);
     });
   })
-  .on("unhandledRejection", (reason, p) => {
-    Logger.error("Unhandled Rejection at Promise", reason);
-    Server.recycle().then(err => {
-      Logger.info(`Server recycled`);
-      process.exit(err ? 1 : 0);
-    });
+  // setTimeout -> for Sentry logging otherwise nada gets logged
+  .on("unhandledRejection", err => {
+    Logger.process.error("Unhandled Rejection at Promise", { err });
+    setTimeout(() => {
+      process.exit(1);
+    }, 3000);
   })
   .on("uncaughtException", err => {
-    Logger.error("Uncaught Exception thrown");
-    process.exit(1);
+    Logger.process.crit("Uncaught Exception thrown", { err });
+    setTimeout(() => {
+      process.exit(1);
+    }, 3000);
   });

@@ -5,49 +5,46 @@ import Logger from "../utils/logger";
 
 import * as HapiSwaggerPlugin from "hapi-swagger";
 
-export default class Plugins {
-  /**
-   * Inits plugins
-   * @param server
-   * @returns init
-   */
-  public static async init(server: Hapi.Server): Promise<Error | any> {
-    await Plugins.swagger(server);
-  }
+/**
+ * Init all plugins.
+ * @param server
+ */
+const init = async (server: Hapi.Server): Promise<Error | any> => {
+  await registerSwagger(server);
+};
 
-  /**
-   * Registers plugins
-   * @param server
-   * @param plugin
-   * @returns register
-   */
-  private static register(server: Hapi.Server, plugin: any): Promise<void> {
-    Logger.debug(`[Plugins] Registering:${JSON.stringify(plugin)}`);
-    return new Promise((resolve, reject) => {
-      server.register(plugin);
-      resolve();
-    });
-  }
+/**
+ * Register Swagger-UI
+ * @param server
+ */
+const registerSwagger = async (server: Hapi.Server): Promise<Error | any> => {
+  try {
+    Logger.plugin.info("Registering swagger-ui");
 
-  /**
-   * Swagger UI.
-   * @param server
-   * @returns swagger
-   */
-  public static async swagger(server: Hapi.Server): Promise<Error | any> {
-    try {
-      Logger.info("[Plugins] Registering swagger-ui");
-
-      await Plugins.register(server, [
-        {
-          options: Config.swagger.options,
-          plugin: HapiSwaggerPlugin
-        },
-        require("@hapi/inert"),
-        require("@hapi/vision")
-      ]);
-    } catch (error) {
-      Logger.info(`[Plugins] Something went wrong: ${error}`);
-    }
+    await register(server, [
+      {
+        options: Config.swagger.options,
+        plugin: HapiSwaggerPlugin
+      },
+      require("@hapi/inert"),
+      require("@hapi/vision")
+    ]);
+  } catch (error) {
+    Logger.info(`Something went wrong: ${error}`);
   }
-}
+};
+
+/**
+ * Register plugin.
+ * @param server
+ * @param plugin
+ */
+const register = (server: Hapi.Server, plugin: any): Promise<void> => {
+  Logger.plugin.debug(`Registering: ${JSON.stringify(plugin)}`);
+  return new Promise((resolve, reject) => {
+    server.register(plugin);
+    resolve();
+  });
+};
+
+export default init;
