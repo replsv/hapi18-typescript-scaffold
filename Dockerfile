@@ -6,6 +6,7 @@ RUN mkdir -p $APP_DIR
 ADD ./src $APP_DIR
 ADD ./logs $APP_DIR
 ADD ./package.json $APP_DIR/package.json
+ADD ./package-lock.json $APP_DIR/package-lock.json
 ADD ./tsconfig.json $APP_DIR/tsconfig.json
 
 WORKDIR $APP_DIR
