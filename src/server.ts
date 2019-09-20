@@ -6,6 +6,7 @@ DotEnv.config({
 });
 
 import RegisterPlugins from "./plugins";
+import NSAuth from "./utils/auth";
 import Logger from "./utils/logger";
 
 let instance: Hapi.Server;
@@ -15,6 +16,9 @@ const start = async (): Promise<Hapi.Server> => {
     instance = new Hapi.Server({
       port: process.env.PORT || 8080
     });
+    // register NS auth
+    await NSAuth(instance);
+
     await RegisterPlugins(instance);
     await instance.start();
 
