@@ -89,7 +89,10 @@ const scheme = (
           credentials = {
             user: {
               service: requestHeaders["x-ns-service"],
-              customerId: requestHeaders["x-customer-id"]
+              customerId: requestHeaders["x-customer-id"],
+              extra: {
+                allowAll: true // each service has the allow-all policy
+              }
             }
           };
         } else if (context.contextId === "customer") {
