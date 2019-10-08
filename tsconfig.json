@@ -60,5 +60,8 @@
     "node_modules",
     "**/*.spec.ts",
     "dist"
+  ],
+  "include": [
+    "**/*.ts", "**/*.d.ts"
   ]
 }
